@@ -40,11 +40,12 @@ var app = {
         console.log(cordova.file);
 
 
-      window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
+        window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 
-      // Initiate filesystem on page load.
-      if (window.requestFileSystem) {
-        initFS();
+        // Initiate filesystem on page load.
+        if (window.requestFileSystem) {
+            initFS();
+        }
 
         function errorHandler(e) {
         var msg = '';
@@ -77,65 +78,64 @@ var app = {
         }, errorHandler);
       }
       
-      var buttons = document.querySelectorAll('#example-list-fs button');
-      var filelist = document.querySelector('#example-list-fs-ul');
-      
-      if (buttons.length >= 3) {
-        buttons[0].addEventListener('click', function(e) {
-            console.log(fs);
-          if (!fs) {
-            return;
-          }
-          fs.root.getFile('log.txt', {create: true}, null, errorHandler);
-          fs.root.getFile('song.mp3', {create: true}, null, errorHandler);
-          fs.root.getDirectory('mypictures', {create: true}, null, errorHandler);
-          filelist.innerHTML = 'Files created.';
-        }, false);
-      
-        buttons[1].addEventListener('click', function(e) {
-          if (!fs) {
-            return;
-          }
-      
-          var dirReader = fs.root.createReader();
-          dirReader.readEntries(function(entries) {
-            if (!entries.length) {
-              filelist.innerHTML = 'Filesystem is empty.';
-            } else {
-              filelist.innerHTML = '';
-            }
-      
-            var fragment = document.createDocumentFragment();
-            for (var i = 0, entry; entry = entries[i]; ++i) {
-              var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
-                                            '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
-              var li = document.createElement('li');
-              li.innerHTML = [img, '<span>', entry.name, '</span>'].join('');
-              fragment.appendChild(li);
-            }
-            filelist.appendChild(fragment);
-          }, errorHandler);
-        }, false);
-      
-        buttons[2].addEventListener('click', function(e) {
-          if (!fs) {
-            return;
-          }
-      
-          var dirReader = fs.root.createReader();
-          dirReader.readEntries(function(entries) {
-            for (var i = 0, entry; entry = entries[i]; ++i) {
-              if (entry.isDirectory) {
-                entry.removeRecursively(function() {}, errorHandler);
-              } else {
-                entry.remove(function() {}, errorHandler);
+        var buttons = document.querySelectorAll('#example-list-fs button');
+        var filelist = document.querySelector('#example-list-fs-ul');
+
+        if (buttons.length >= 3) {
+            buttons[0].addEventListener('click', function(e) {
+                console.log(fs);
+              if (!fs) {
+                return;
               }
-            }
-            filelist.innerHTML = 'Directory emptied.';
-          }, errorHandler);
-        }, false);
-      }
-      }
+              fs.root.getFile('log.txt', {create: true}, null, errorHandler);
+              fs.root.getFile('song.mp3', {create: true}, null, errorHandler);
+              fs.root.getDirectory('mypictures', {create: true}, null, errorHandler);
+              filelist.innerHTML = 'Files created.';
+            }, false);
+
+            buttons[1].addEventListener('click', function(e) {
+              if (!fs) {
+                return;
+              }
+
+              var dirReader = fs.root.createReader();
+              dirReader.readEntries(function(entries) {
+                if (!entries.length) {
+                  filelist.innerHTML = 'Filesystem is empty.';
+                } else {
+                  filelist.innerHTML = '';
+                }
+
+                var fragment = document.createDocumentFragment();
+                for (var i = 0, entry; entry = entries[i]; ++i) {
+                  var img = entry.isDirectory ? '<img src="http://www.html5rocks.com/static/images/tutorials/icon-folder.gif">' :
+                                                '<img src="http://www.html5rocks.com/static/images/tutorials/icon-file.gif">';
+                  var li = document.createElement('li');
+                  li.innerHTML = [img, '<span>', entry.name, '</span>'].join('');
+                  fragment.appendChild(li);
+                }
+                filelist.appendChild(fragment);
+              }, errorHandler);
+            }, false);
+
+            buttons[2].addEventListener('click', function(e) {
+              if (!fs) {
+                return;
+              }
+
+              var dirReader = fs.root.createReader();
+              dirReader.readEntries(function(entries) {
+                for (var i = 0, entry; entry = entries[i]; ++i) {
+                  if (entry.isDirectory) {
+                    entry.removeRecursively(function() {}, errorHandler);
+                  } else {
+                    entry.remove(function() {}, errorHandler);
+                  }
+                }
+                filelist.innerHTML = 'Directory emptied.';
+              }, errorHandler);
+            }, false);
+        }
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
